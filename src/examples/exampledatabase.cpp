@@ -1653,7 +1653,6 @@ std::vector<litesql::Database::SchemaItem> ExampleDatabase::getSchema() const {
     res.push_back(Database::SchemaItem("Employee_Office_","table","CREATE TABLE Employee_Office_ (Employee1_ " + backend->getSQLType(A_field_type_integer,"") + "" +",Office2_ " + backend->getSQLType(A_field_type_integer,"") + "" +")"));
     res.push_back(Database::SchemaItem("user_id_idx","index","CREATE INDEX user_id_idx ON user_ (id_)"));
     res.push_back(Database::SchemaItem("Person_id_idx","index","CREATE INDEX Person_id_idx ON Person_ (id_)"));
-    res.push_back(Database::SchemaItem("Person__name_age_idx","index","CREATE UNIQUE INDEX Person__name_age_idx ON Person_ (name_,age_)"));
     res.push_back(Database::SchemaItem("Role_id_idx","index","CREATE INDEX Role_id_idx ON Role_ (id_)"));
     res.push_back(Database::SchemaItem("School_id_idx","index","CREATE INDEX School_id_idx ON School_ (id_)"));
     res.push_back(Database::SchemaItem("Office_id_idx","index","CREATE INDEX Office_id_idx ON Office_ (id_)"));

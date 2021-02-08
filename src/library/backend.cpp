@@ -12,6 +12,10 @@
 #include "litesql/utils.hpp"
 #include "litesql/except.hpp"
 
+
+#include <direct.h>
+
+
 #ifndef  LITESQL_WITH_BACKEND_PLUGINS
 
 #include "sqlite3.hpp"
@@ -205,6 +209,7 @@ static const char* getLibraryName(const char* backendType) {
 unique_ptr<Backend> Backend::getBackend(const string& backendType,
                                         const string& connInfo) noexcept(false)
 {
+
   Backend* backend=nullptr;
 #ifdef  LITESQL_WITH_BACKEND_PLUGINS
   backend = LoadedBackend::load(getLibraryName(backendType.c_str()),connInfo);

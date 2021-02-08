@@ -12,10 +12,10 @@
             <value name="Female" value="1"/>
         </field>
         <method name="sayHello"/>
-      <index unique="true">
+      <!-- <index unique="true">
         <indexfield name="name"/>
         <indexfield name="age"/>
-      </index>
+      </index> -->
 
     </object>
     <relation id="Mother" unidir="true">

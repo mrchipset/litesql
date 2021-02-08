@@ -17,7 +17,8 @@
 #include "litesql/string.hpp"
 #include "litesql/backend.hpp"
 
-typedef struct st_mysql MYSQL;
+#include <mysql.h>
+// typedef struct st_mysql MYSQL;
 
 namespace litesql {
 

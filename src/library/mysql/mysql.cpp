@@ -80,11 +80,12 @@ Records MySQL::Result::records() const {
 }
 
 MySQL::MySQL(const std::string& connInfo) {
-    Split params(connInfo,";");
+    auto params = split(connInfo, ";");
+    // Split params(connInfo,";");
     host = "localhost";
     int port = 0;
     for (size_t i = 0; i < params.size(); i++) {
-        Split param(params[i], "=");
+        auto param = split(params[i], "=");
         if (param.size() == 1)
             continue;
         if (param[0] == "host")
@@ -102,7 +103,9 @@ MySQL::MySQL(const std::string& connInfo) {
     mysql_init(conn);
     if (!mysql_real_connect(conn, host.c_str(), user.c_str(), passwd.c_str(),
               database.c_str(), port, NULL, 0)) {
-        throw DatabaseError(mysql_error(conn));
+        std::string error_s(mysql_error(conn));
+        std::cout << "mysql_error: " << error_s << std::endl;
+        throw DatabaseError(error_s);
     }
 }
 

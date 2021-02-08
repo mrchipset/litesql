@@ -25,7 +25,7 @@ int main(int UNUSED_ARG(argc), char ** UNUSED_ARG(argv)) {
 
   int exitcode=0;
   // using SQLite3 as backend
-  ExampleDatabase db("sqlite3", "database=example.db");
+  ExampleDatabase db("mysql", "database=exampledb;user=root;port=3306;host=127.0.0.1;password=xfzhou@srls");
   try {
     // create tables, sequences and indexes
     db.verbose = true;
@@ -51,7 +51,6 @@ int main(int UNUSED_ARG(argc), char ** UNUSED_ARG(argv)) {
       jeff.update();
     } catch(ConstraintError& e) {
       cerr << e << endl;
-
     };
     Person jill(db);
     jill.name = "Jill";
@@ -105,13 +104,14 @@ int main(int UNUSED_ARG(argc), char ** UNUSED_ARG(argv)) {
     for (vector<Person>::iterator i = family.begin(); i != family.end(); i++)
       cout << toString(*i) << endl;
 
-    // select intersection of Jeff's and Jill's children and
-    // iterate results with cursor
-    Cursor<Person> cursor = intersect(jeff.children().get(),
-                                      jill.children().get()).cursor();
-    // Jack should say hello
-    for (;cursor.rowsLeft();cursor++) 
-      (*cursor).sayHello();
+    // XXX fix this for mysql
+    // // select intersection of Jeff's and Jill's children and
+    // // iterate results with cursor
+    // Cursor<Person> cursor = intersect(jeff.children().get(),
+    //                                   jill.children().get()).cursor();
+    // // Jack should say hello
+    // for (;cursor.rowsLeft();cursor++) 
+    //   (*cursor).sayHello();
 
     // select a non-existing Person
     try {
@@ -124,7 +124,8 @@ int main(int UNUSED_ARG(argc), char ** UNUSED_ARG(argv)) {
     // clean up
     //        db.drop();
   } catch (Except& e) {
-    cerr << e << endl;
+    cout << "Exception: \t" << std::endl;
+    cout << e << endl;
     exitcode = 1;
   }
   return exitcode;

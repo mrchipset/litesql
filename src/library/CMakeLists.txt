@@ -54,7 +54,6 @@ set(litesql_SOURCES    database.cpp
 
 add_library(${LIBNAME} STATIC ${litesql_SOURCES})
 set_property(TARGET ${LIBNAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
-
 install(TARGETS ${LIBNAME} EXPORT ${LIBNAME}
             RUNTIME DESTINATION lib 
             LIBRARY DESTINATION lib
@@ -113,6 +112,8 @@ if (LITESQL_WITH_SQLITE3)
     sqlite3/sqlite3_backend.cpp 
     sqlite3/sqlite3.hpp sqlite3/sqlite3_backend_plugin.cpp
   )
+  include_directories(${SQLITE3_INCLUDE_DIRS})
+  include_directories(sqlite3)
   target_include_directories(${LIBNAME}_backend_sqlite3 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
   target_link_libraries(${LIBNAME}_backend_sqlite3 PRIVATE litesql PRIVATE litesql-util PRIVATE ${SQLITE3_LIBRARIES})
 
@@ -122,16 +123,28 @@ endif(LITESQL_WITH_SQLITE3)
 # litesql mysql library
 ##############################################################################
 if (LITESQL_WITH_MYSQL)
-  add_library(  ${LIBNAME}_mysql SHARED
+  include_directories(${MYSQL_INCLUDE_DIR})
+  add_library(  ${LIBNAME}_mysql STATIC
+                        mysql/mysql.hpp
                         mysql/mysql.cpp
+  )
+
+  add_library(  ${LIBNAME}_backend_mysql SHARED
+                        mysql/mysql.hpp
+                        mysql/mysql.cpp
+                        mysql/mysql_backend_plugin.cpp
    
   )
-  install(TARGETS ${LIBNAME}_mysql  EXPORT ${LIBNAME}_mysql 
-            RUNTIME DESTINATION lib 
-            LIBRARY DESTINATION lib
-            ARCHIVE DESTINATION lib/static 
-            COMPONENT devel)
-  install(EXPORT ${LIBNAME}_mysql DESTINATION lib)
+  target_link_directories(${LIBNAME}_mysql PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+  target_link_libraries(${LIBNAME}_mysql PRIVATE litesql PRIVATE litesql-util PRIVATE ${MYSQL_LIBRARIES})
+  target_link_libraries(${LIBNAME}_backend_mysql PRIVATE litesql PRIVATE litesql-util PRIVATE ${MYSQL_LIBRARIES})
+  include_directories(mysql)
+  # install(TARGETS ${LIBNAME}_mysql  EXPORT ${LIBNAME}_mysql 
+  #           RUNTIME DESTINATION lib 
+  #           LIBRARY DESTINATION lib
+  #           ARCHIVE DESTINATION lib/static 
+  #           COMPONENT devel)
+  # install(EXPORT ${LIBNAME}_mysql DESTINATION lib)
 if (MSVC)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/debug/${LIBNAME}_mysqld.lib DESTINATION lib/static COMPONENT devel)
 endif(MSVC)

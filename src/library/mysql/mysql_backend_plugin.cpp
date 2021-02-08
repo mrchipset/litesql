@@ -1,5 +1,5 @@
 #include "litesql/backend.hpp"
-#include "sqlite3.hpp"
+#include "mysql.hpp"
 
 using namespace litesql;
 
@@ -7,7 +7,7 @@ extern "C" __declspec(dllexport) Backend* createBackend(const std::string& param
 {
   Backend* pBackend = nullptr;
   try {
-    pBackend = new SQLite3(parameter);
+    pBackend = new MySQL(parameter);
   } catch(const DatabaseError& /*ex*/) {
     pBackend = nullptr;
   }

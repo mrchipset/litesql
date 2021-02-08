@@ -42,7 +42,7 @@ include(cmake/FindSQLite3.cmake)
 include(cmake/FindOCILib.cmake)
 
 option(LITESQL_WITH_BACKEND_PLUGINS "build with database plugins in shared libraries" ON)
-option(LITESQL_WITH_MYSQL "build with mysql Backend" OFF)
+option(LITESQL_WITH_MYSQL "build with mysql Backend" ON)
 option(LITESQL_WITH_SQLITE3 "build with sqlite3 backend(sources integrated)" ON)
 option(LITESQL_WITH_POSTGRES "build with postgres backend" OFF)
 option(LITESQL_WITH_OCILIB "build with ocilib Backend" OFF)
@@ -55,7 +55,6 @@ option(CMAKE_SUPPRESS_REGENERATION "suppress rules to re-run cmake on changes (w
 
 list(APPEND BACKEND_LIBRARIES ${CMAKE_DL_LIBS})
 set(BACKEND_DL_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/src/library)
-
 if (LITESQL_WITH_SQLITE3)
   set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS HAVE_LIBSQLITE3)
   option(LITESQL_USE_SYSTEM_SQLITE "use sqlite3 lib provided by system" ON)
@@ -68,23 +67,24 @@ if (LITESQL_WITH_MYSQL AND MYSQL_FOUND)
   list(APPEND BACKEND_LIBRARIES litesql_mysql ${MYSQL_LIBRARIES})
   list(APPEND BACKEND_DEFINITIONS ${MYSQL_DEFINITIONS})
   
-  if (MSVC)
-    # the precompiled mysql client libraries are compiled with libcmt 
-    # - this causes duplicate symbols
-    # if MySQL Connector is older than this then LIBCMT will be disabled
-    # C Connector 6.1 works fine with VS 2013 WITH LIBCMT, 
-    # I haven't tested older versions
-    set(deprecated_connector_threshold "MySQL Connector C 6.0")
-    # now to figure out the mysql C connector version number
-    string(REGEX MATCH "MySQL Connector C [0-9]+\\.[0-9]+" curr_version ${MYSQL_INCLUDE_DIR})
-    if(${curr_version} STRGREATER ${deprecated_connector_threshold})
-      message("MySQL backend: LIBCMT enabled")
-    else(${curr_version} STRGREATER ${deprecated_connector_threshold})
-      message("MySQL backend: LIBCMT disabled")
-      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:LIBCMT")
-    endif(${curr_version} STRGREATER ${deprecated_connector_threshold})
-  endif (MSVC)
+  # if (MSVC)
+  #   # the precompiled mysql client libraries are compiled with libcmt 
+  #   # - this causes duplicate symbols
+  #   # if MySQL Connector is older than this then LIBCMT will be disabled
+  #   # C Connector 6.1 works fine with VS 2013 WITH LIBCMT, 
+  #   # I haven't tested older versions
+  #   set(deprecated_connector_threshold "MySQL Connector C 6.0")
+  #   # now to figure out the mysql C connector version number
+  #   string(REGEX MATCH "MySQL Connector C [0-9]+\\.[0-9]+" curr_version ${MYSQL_INCLUDE_DIR})
+  #   if(${curr_version} STRGREATER ${deprecated_connector_threshold})
+  #     message("MySQL backend: LIBCMT enabled")
+  #   else(${curr_version} STRGREATER ${deprecated_connector_threshold})
+  #     message("MySQL backend: LIBCMT disabled")
+  #     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:LIBCMT")
+  #   endif(${curr_version} STRGREATER ${deprecated_connector_threshold})
+  # endif (MSVC)
   
+  add_definitions(-DWIN32_LEAN_AND_MEAN)
 else(LITESQL_WITH_MYSQL AND MYSQL_FOUND)
   message("can not use mysql")
   set(LITESQL_WITH_MYSQL OFF)
