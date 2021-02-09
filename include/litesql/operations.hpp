@@ -22,8 +22,10 @@ litesql::DataSource<T> select(const litesql::Database & db,
 template <class T>
 litesql::DataSource<T> intersect(const litesql::DataSource<T>& ds1, 
                                  const litesql::DataSource<T>& ds2) {
-    std::string sel = ds1.idQuery().asString() + " INTERSECT " 
-        + ds2.idQuery().asString();
+    const std::string ds1_sel = ds1.idQuery().asString();
+    const std::string ds2_sel = ds2.idQuery().asString();
+    std::string sel = "(" + ds1_sel + ") a INNER JOIN (" +  
+        ds1_sel + ") b on ( a.id_ = b.id_)";
     return litesql::DataSource<T>(ds1.getDatabase(), T::Id.in(sel));
 }
 /** returns DataSource for accessing union of two sets of objects of type T */

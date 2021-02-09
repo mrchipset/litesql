@@ -56,7 +56,7 @@ namespace litesql {
                 return false;
             }
 
-            virtual std::string getSQLType(AT_field_type fieldType, const std::string& length="") const;
+            virtual std::string getSQLType(AT_field_type fieldType, const std::string& length="255") const;
             virtual std::string getCreateSequenceSQL(const std::string& name) const;
             virtual std::string getSeqSQL(const std::string& sname) const;
 

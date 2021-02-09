@@ -46,12 +46,19 @@ using std::string;
 using std::vector;
 
 string Backend::getSQLType(AT_field_type fieldType,
-                           const string& UNUSED_ARG(length)) const
+                           const string& length) const
 {
+  std::string len = length;
+  if (len.empty())
+  {
+    len = "255";
+  }
+  std::stringstream ss;
+  ss << "VARCHAR(" << len << ")";
   switch(fieldType) {
     case A_field_type_integer: return "INTEGER";
     case A_field_type_bigint: return "BIGINT";
-    case A_field_type_string: return "TEXT";
+    case A_field_type_string: return ss.str();
     case A_field_type_float: return "FLOAT";
     case A_field_type_double: return "DOUBLE";
     case A_field_type_boolean: return "INTEGER";
@@ -62,7 +69,6 @@ string Backend::getSQLType(AT_field_type fieldType,
     default: return "";
   }
 }
-
 
 string Backend::getCreateSequenceSQL(const string& name) const
 {
