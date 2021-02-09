@@ -35,6 +35,8 @@ else(MYSQL_INCLUDE_DIR AND MYSQL_LIBRARIES)
       $ENV{SystemDrive}/MySQL/*/include
       ${PROGRAM_FILES_32}/MySQL/*/include
       ${PROGRAM_FILES_64}/MySQL/*/include
+      ${CMAKE_CURRENT_SOURCE_DIR}/win32/include
+
       )
 
 if(WIN32 AND MSVC)
@@ -45,6 +47,7 @@ if(WIN32 AND MSVC)
       $ENV{SystemDrive}/MySQL/*/lib
       ${PROGRAM_FILES_32}/MySQL/*/lib
       ${PROGRAM_FILES_64}/MySQL/*/lib
+      ${CMAKE_CURRENT_SOURCE_DIR}/win32/lib
       )
 else(WIN32 AND MSVC)
   find_library(MYSQL_LIBRARIES NAMES mysqlclient
@@ -53,6 +56,7 @@ else(WIN32 AND MSVC)
       /usr/local/lib/mysql
       /usr/local/mysql/lib
       /opt/local/lib/mysql*/mysql
+      ${CMAKE_CURRENT_SOURCE_DIR}/win32/lib
       )
 endif(WIN32 AND MSVC)
 

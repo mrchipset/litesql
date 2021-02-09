@@ -38,6 +38,7 @@ IF ( NOT SQLITE3_FOUND AND NOT PKG_CONFIG_FOUND )
 		/sw/include/
 		/usr/local/include/
 		/usr/include/
+		${CMAKE_CURRENT_SOURCE_DIR}/win32/include
 	)
 	FIND_LIBRARY( _sqlite3_link_DIR sqlite3 
 		PATHS
@@ -48,7 +49,9 @@ IF ( NOT SQLITE3_FOUND AND NOT PKG_CONFIG_FOUND )
 		/usr/lib64
 		/usr/local/lib64
 		/opt/lib64
-	)
+		${CMAKE_CURRENT_SOURCE_DIR}/win32/lib
+		)
+
 	IF ( _sqlite3_include_DIR AND _sqlite3_link_DIR )
 		SET ( _sqlite3_FOUND TRUE )
 	ENDIF ( _sqlite3_include_DIR AND _sqlite3_link_DIR )
